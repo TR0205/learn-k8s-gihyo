@@ -1,0 +1,34 @@
+kind: Service
+apiVersion: v1
+metadata:
+  name:  print-version # リソースの名称
+  labels:
+    app: print-version # kubectlコマンドでこのリソースを指定する際に使用
+spec:
+  selector:
+    app:  print-version # このサービスがターゲットにするpodのラベルを指定する(上のlabels.app)
+  ports:
+  - port:  80
+    targetPort:  8080
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name:  print-version # リソースの名称
+  labels:
+    app: print-version # kubectlコマンドでこのリソースを指定する際に使用
+spec:
+  replicas: 1 # podを一つ作成
+  selector: # deploymentが管理するpodの指定
+    matchLabels:
+      app: print-version
+  template: # podの定義(どのようなコンテナを内包するか)
+    metadata:
+      labels:
+        app: print-version # pod定義自体にラベルをつける
+    spec: # podが内包するコンテナの定義
+      containers:
+      - name: print-version
+        image: ghcr.io/gihyodocker/print-version:v0.0.1
+        ports:
+        - containerPort: 8080
