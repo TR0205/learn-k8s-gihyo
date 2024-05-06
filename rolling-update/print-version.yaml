@@ -18,7 +18,12 @@ metadata:
   labels:
     app: print-version # kubectlコマンドでこのリソースを指定する際に使用
 spec:
-  replicas: 1 # podを一つ作成
+  replicas: 4 # podを4つ作成
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxSurge: 4 # Rolling Updateの実施時に新しいpodを作る個数
+      maxUnavailable: 3 # Rolling Updateの際、同時に削除できるpodの最大数(デフォルトは25%)
   selector: # deploymentが管理するpodの指定
     matchLabels:
       app: print-version

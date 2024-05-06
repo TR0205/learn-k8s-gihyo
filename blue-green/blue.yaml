@@ -1,0 +1,24 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name:  print-version-blue # リソースの名称
+  labels:
+    app: print-version # kubectlコマンドでこのリソースを指定する際に使用
+    color: blue # blue green deployのうちどちらかを指定
+spec:
+  replicas: 1 # podを1つ作成
+  selector: # deploymentが管理するpodの指定
+    matchLabels:
+      app: print-version
+      color: blue
+  template: # podの定義(どのようなコンテナを内包するか)
+    metadata:
+      labels:
+        app: print-version # pod定義自体にラベルをつける
+        color: blue
+    spec: # podが内包するコンテナの定義
+      containers:
+      - name: print-version
+        image: ghcr.io/gihyodocker/print-version:v0.0.1
+        ports:
+        - containerPort: 8080
